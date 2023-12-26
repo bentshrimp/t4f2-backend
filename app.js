@@ -12,6 +12,7 @@ var indexRouter = require("./src/routes/index");
 var postRouter = require('./src/routes/post');
 var topicRouter = require('./src/routes/topic');
 var musicRouter = require('./src/routes/music');
+var emoteRouter = require('./src/routes/emotion');
 var app = express();
 
 const SECRET = process.env.SECRET;
@@ -29,6 +30,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// app.use("/", indexRouter);
+// // app.use('/', usersRouter);
+app.use('/', musicRouter);
+app.use('/emote', emoteRouter);
 app.use('/', indexRouter);
 app.use('/post', postRouter);
 app.use('/topic', topicRouter);
