@@ -1,68 +1,74 @@
-const express = require("express");
-const path = require("path");
+const express = require('express');
+const path = require('path');
 const router = express.Router();
+const { createUser, findUser } = require('../repository/user');
+
+const SECRET = process.env.SECRET;
 
 /* GET home page. */
-router.get("/signin", (req, res) => {
-  const filePath = path.join(__dirname, "../views/login.html");
+router.get('/signin', (req, res) => {
+  const filePath = path.join(__dirname, '../views/login.html');
   res.sendFile(filePath);
 });
 
 // 로그인 기능
-router.post("/signin", async (req, res) => {
+router.post('/signin', async (req, res) => {
   try {
     const { email, nickname, pwd } = req.body;
-
-    const exist = new loginSystem(email, pwd);
-    const execute = await exist.Login();
+    const exist = await findUser(email);
+    console.log(exist);
+    console.log(exist[0].dataValues.pwd);
+    if (!exist) {
+      res.status(401).send({ msg: "account doesn't exist" });
+    }
+    if (pwd !== exist[0].dataValues.pwd) {
+      res.status(401).send({ msg: 'wrong password' });
+    } else {
+      res.cookie(req.body, JSON.stringify(email));
+      res.status(200).json({ msg: 'Login success' });
+    }
   } catch (err) {
     console.log(err);
-    if (err == "Nan") res.status(401).json({ msg: "Non Account" });
-    else res.status(401).json({ msg: "Format Error" });
+    if (err == 'Nan') res.status(401).json({ msg: 'Non Account' });
+    else res.status(401).json({ msg: 'Format Error' });
   }
 });
 
 // 회원가입 기능
-router.post("/signup", async (req, res) => {
+router.post('/signup', async (req, res) => {
   try {
     const { email, nickname, pwd } = req.body;
-    const module = new LoginSystem(email, pwd);
-    const execute = await module.Register(nickname);
-    console.log(email + " " + nickname);
-
-    if (execute == 1) {
-      console.log(nickname + "님이 회원가입 하셨습니다.");
-      res.status(200).send("Success Register");
-    } else if (execute == 2) {
-      console.log("해당 이메일은 등록된 주소입니다.");
-      res.status(400).send("Duplicate E-mail : " + email);
+    const exist = await findUser(email);
+    if (exist) {
+      res.status(400).json({ msg: 'You have already signed up' });
+    } else if (pwd !== exist.pwd) {
+      res.status(401).send({ msg: 'wrong password' });
     } else {
-      console.log("잘못된 입력입니다.");
-      res.status(401).send("알 수 없는 오류");
+      res.status(200).json({ msg: req.body });
     }
   } catch (err) {
     console.log(err);
-    res.status(401).send("알 수 없는 오류");
+    res.status(401).send('알 수 없는 오류');
   }
 });
 
 // 로그아웃 엔드포인트
-router.post("/signout", function (req, res) {
+router.post('/signout', function (req, res) {
   if (req.session.userId) {
     req.session.destroy(function (err) {
       if (err) {
         console.log(err);
       } else {
-        res.clearCookie("login");
-        res.status(200).send("logout");
+        res.clearCookie('login');
+        res.status(200).send('logout');
       }
     });
   } else {
-    res.status(400).send("logout failed");
+    res.status(400).send('logout failed');
   }
 });
 
 // 사용자가 글을 게시하는 endpoint
-router.post("/upload", function (req, res) {});
+router.post('/upload', function (req, res) {});
 
 module.exports = router;
