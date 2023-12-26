@@ -1,14 +1,38 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
-const { sequelize, User, Topic, Post } = require("../models/index");
+const { readPost, createPost } = require('../src/repository/post');
+const { createUser, findUser } = require('../src/repository/user');
+const { createTopic } = require('../src/repository/topic');
 
-/* GET home page. */
-router.get("/", async function (req, res, next) {
+router.get('/post', async function (req, res, next) {
   try {
-    const users = await User.findAll();
-    res.json(users);
+    const post = await readPost(1);
+    if (post === null) {
+      console.log('post not found');
+    } else {
+      console.log('post: ', post);
+    }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.log(error);
+  }
+});
+
+
+router.get('/user', async function (req, res, next) {
+  try {
+    const user = await createUser('mail', 'nickname', 'pwd');
+    console.log(user);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.get('/topic', async function (req, res, next) {
+  try {
+    const topic = await createTopic('topic_title', 'topic_content');
+    console.log(topic);
+  } catch (error) {
+    console.log(error);
   }
 });
 
