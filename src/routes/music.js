@@ -9,7 +9,7 @@ const router = express.Router();
 // 스포티파이 API 환경변수
 const client_id = '64e2ab06dab340e28a661996e363124f';
 const client_secret = '50ccef21e9ab46b48efe4ea526d50c04';
-const redirect_uri = 'http://localhost:3000/callback';
+const redirect_uri = 'http://localhost:3000/music/callback';
 const stateKey = 'spotify_auth_state';
 
 var access_token = null;

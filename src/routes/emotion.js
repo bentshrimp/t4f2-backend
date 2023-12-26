@@ -7,18 +7,19 @@ const cookieParser = require('cookie-parser');
 const {addEmotion, deleteEmotion} = require('../repository/emotion');
 const router = express.Router();
 
-router.post('/emotion', function(req, res) {
+router.post('/:emoteId', async (req, res) => {
     const type = req.query.type;
     const nickname = req.query.nickname;
     const mail = req.query.mail;
     const postId = req.query.postId;
+    const id = req.params.emoteId;
 
     addEmotion(type, id, nickname, mail, postId);
     //res.send({msg: "success post emote"});
 });
 
-router.delete('/emotion', function(req, res) {
-    const id = req.query.id;
+router.delete('/:emoteId', async (req, res) => {
+    const id = req.params.emoteId;
     deleteEmotion(id);
     //res.send({msg: "success delete emote"});
 });

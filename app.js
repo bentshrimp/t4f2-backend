@@ -30,14 +30,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use("/", indexRouter);
-// // app.use('/', usersRouter);
-app.use('/', musicRouter);
-app.use('/emote', emoteRouter);
 app.use('/', indexRouter);
 app.use('/post', postRouter);
 app.use('/topic', topicRouter);
 app.use('/music', musicRouter);
+app.use('/emote', emoteRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
