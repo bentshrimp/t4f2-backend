@@ -4,12 +4,13 @@ var path = require('path');
 const bodyParser = require('body-parser');
 // const session = require('express-session');
 var cookieParser = require('cookie-parser');
+//var bodyParser = require('body-parser');
 var logger = require('morgan');
 const { sequelize } = require('./models');
 
-var indexRouter = require('./src/routes/index');
-var usersRouter = require('./src/routes/users');
-
+// var indexRouter = require("./src/routes/index");
+// // var usersRouter = require('./src/routes/users');
+var musicRouter = require('./src/routes/music');
 var app = express();
 
 const SECRET = process.env.SECRET;
@@ -38,8 +39,9 @@ app.use(cookieParser(SECRET));
 // );
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// app.use('/', indexRouter);
+// app.use('/', usersRouter);
+app.use('/', musicRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

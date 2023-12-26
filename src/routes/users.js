@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 
 // 사용자가 글을 게시하는 endpoint
 router.post('/upload', function(req, res) {
-
+  
 });
 
 module.exports = router;
