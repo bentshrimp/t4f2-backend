@@ -3,7 +3,7 @@ const { Topic } = require('../../models/index');
 async function createTopic(title, content) {
   try {
     const topic = await Topic.create({
-      id : 1,
+      id: 1,
       title: title,
       content: content,
     });
@@ -12,11 +12,26 @@ async function createTopic(title, content) {
     throw error;
   }
 }
-async function readTopic(title) {
+async function readTopic(id) {
   try {
     const topic = await Topic.findAll({
-      where: { title: title },
+      where: { id: id },
     });
+    return topic;
+  } catch (error) {
+    throw error;
+  }
+}
+async function updateTopic(id, title, content) {
+  try {
+    const topic = await Topic.update(
+      { title: title, content: content },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
     return topic;
   } catch (error) {
     throw error;
@@ -24,15 +39,26 @@ async function readTopic(title) {
 }
 async function deleteTopic(id) {
   try {
-    const topic = await Topic.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return topic;
+    const post = await Topic.destroy({ where: { id: id } });
+    return post;
   } catch (error) {
     throw error;
   }
 }
 
-module.exports = { createTopic, readTopic, deleteTopic };
+async function getTodayTopic() {
+  try {
+    const posts = await Topic.findAll({ limit: 3 });
+    return posts;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = {
+  createTopic,
+  readTopic,
+  updateTopic,
+  deleteTopic,
+  getTodayTopic,
+};

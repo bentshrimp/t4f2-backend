@@ -8,8 +8,9 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const { sequelize } = require('./models');
 
-// var indexRouter = require("./src/routes/index");
-// // var usersRouter = require('./src/routes/users');
+var indexRouter = require("./src/routes/index");
+var postRouter = require('./src/routes/post');
+var topicRouter = require('./src/routes/topic');
 var musicRouter = require('./src/routes/music');
 var app = express();
 
@@ -26,22 +27,12 @@ app.use(express.json());
 // app.use(express.bodyParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser(SECRET));
-// app.use(
-//   session({
-//     secret: SECRET,
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//       httpOnly: true,
-//       secure: false,
-//     },
-//   })
-// );
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', indexRouter);
-// app.use('/', usersRouter);
-app.use('/', musicRouter);
+app.use('/', indexRouter);
+app.use('/post', postRouter);
+app.use('/topic', topicRouter);
+app.use('/music', musicRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

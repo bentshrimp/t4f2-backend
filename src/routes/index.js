@@ -2,10 +2,17 @@ const express = require('express');
 const path = require('path');
 const router = express.Router();
 const { createUser, findUser } = require('../repository/user');
+const { getTodayPost } = require('../repository/post');
 
 const SECRET = process.env.SECRET;
 
 /* GET home page. */
+router.get('/', async (req, res) => {
+  const todayposts = await getTodayPost();
+  console.log(todayposts);
+  res.status(200).json(todayposts);
+});
+
 router.get('/signin', (req, res) => {
   const filePath = path.join(__dirname, '../views/login.html');
   res.sendFile(filePath);
@@ -44,7 +51,7 @@ router.post('/signup', async (req, res) => {
     } else if (pwd !== exist.pwd) {
       res.status(401).send({ msg: 'wrong password' });
     } else {
-      res.status(200).json({ msg: req.body });
+      res.status(200).json({ msg: 'signup success' });
     }
   } catch (err) {
     console.log(err);
