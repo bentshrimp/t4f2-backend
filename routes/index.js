@@ -1,24 +1,39 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
+const { readPost, createPost } = require('../src/repository/post');
+const { createUser, findUser } = require('../src/repository/user');
+const { createTopic } = require('../src/repository/topic');
 
-const mysql = require("mysql");
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "IsDead1!",
-  database: "mydb",
+router.get('/post', async function (req, res, next) {
+  try {
+    const post = await readPost(1);
+    if (post === null) {
+      console.log('post not found');
+    } else {
+      console.log('post: ', post);
+    }
+  } catch (error) {
+    console.log(error);
+  }
 });
 
-/* GET home page. */
-router.get("/", function (req, res, next) {
-  connection.connect();
-  connection.query("SELECT * from user", (error, rows, fields) => {
-    if (error) throw error;
-    console.log("User info is: ", rows);
-  });
 
-  connection.end();
-  res.render("index", { title: "Express" });
+router.get('/user', async function (req, res, next) {
+  try {
+    const user = await createUser('mail', 'nickname', 'pwd');
+    console.log(user);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.get('/topic', async function (req, res, next) {
+  try {
+    const topic = await createTopic('topic_title', 'topic_content');
+    console.log(topic);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 module.exports = router;

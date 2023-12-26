@@ -13,3 +13,5 @@ node_modules/
 # Sub src
 src/login
 src/views
+
+.env
