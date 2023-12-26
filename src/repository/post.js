@@ -1,16 +1,15 @@
 const { Post } = require('../../models/index');
 
-async function createPost(id, content, mail) {
+async function createPost(content, mail, topic_id) {
   try {
     const post = await Post.create({
       content: content,
-      id: id,
-      created_time: Date.now(),
-      topic_id: 1,
-      edited: false,
       user_mail: mail,
+      created_time: Date.now(),
+      topic_id: topic_id,
+      edited: false,
     });
-    return post
+    return post;
   } catch (error) {
     throw error;
   }
@@ -44,7 +43,7 @@ async function updatePost(id, title, content) {
 async function deletePost(id) {
   try {
     const post = await Post.destroy({ where: { id: id } });
-    return post
+    return post;
   } catch (error) {
     throw error;
   }
