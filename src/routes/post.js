@@ -8,8 +8,8 @@ const {
 var router = express.Router();
 
 router.post('/', async function (req, res) {
-  const { content, mail, topic_id } = req.body;
-  await createPost(content, mail, topic_id);
+  const { content, email, topic_id } = req.body;
+  await createPost(content, email, topic_id);
   res.status(200).send('ok');
 });
 

@@ -40,7 +40,7 @@ const Topic = sequelize.define(
       allowNull: false,
     },
     content: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.TEXT,
       allowNull: false,
     },
   },
@@ -55,7 +55,7 @@ const Post = sequelize.define(
   'Post',
   {
     content: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     id: {
@@ -128,7 +128,6 @@ const Music = sequelize.define(
     },
     title: {
       type: DataTypes.STRING(45),
-      primaryKey: true,
       allowNull: false,
     },
     artist: {

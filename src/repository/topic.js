@@ -1,4 +1,5 @@
 const { Topic } = require('../../models/index');
+const { Op } = require('sequelize');
 
 async function createTopic(title, content) {
   try {
@@ -55,10 +56,26 @@ async function getTodayTopic() {
   }
 }
 
+async function searchTopic(query) {
+  try {
+    const topics = await Topic.findAll({
+      where: {
+        content: {
+          [Op.like]: `%${query}%`,
+        },
+      },
+    });
+    return topics;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   createTopic,
   readTopic,
   updateTopic,
   deleteTopic,
   getTodayTopic,
+  searchTopic,
 };

@@ -4,6 +4,7 @@ const {
   readTopic,
   updateTopic,
   deleteTopic,
+  searchTopic,
 } = require('../repository/topic');
 
 var router = express.Router();
@@ -38,6 +39,17 @@ router.put('/:topicId', async (req, res, next) => {
 router.delete('/:topicId', async (req, res) => {
   const topic = await deleteTopic(req.params.topicId);
   res.status(200).send('ok');
+});
+
+router.get('/', async (req, res) => {
+  const query = req.query.query;
+  try {
+    const result = await searchTopic(query);
+    const list = result.map((item) => item.content);
+    res.status(200).send({ searchResult: list });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 module.exports = router;

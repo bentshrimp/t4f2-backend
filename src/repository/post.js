@@ -24,6 +24,18 @@ async function readPost(id) {
   }
 }
 
+async function getPost(topic_id) {
+  try {
+    const post = await Post.findAll({
+      where: { topic_id: topic_id },
+      limit: 10,
+    });
+    return post;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function updatePost(id, title, content) {
   try {
     const post = await Post.update(
