@@ -2,13 +2,13 @@ const express = require('express');
 const path = require('path');
 const router = express.Router();
 const { createUser, findUser } = require('../repository/user');
-const { getTodayPost } = require('../repository/post');
+const { getTodayTopic } = require('../repository/topic');
 
 const SECRET = process.env.SECRET;
 
 /* GET home page. */
 router.get('/', async (req, res) => {
-  const todayposts = await getTodayPost();
+  const todayposts = await getTodayTopic();
   console.log(todayposts);
   res.status(200).json(todayposts);
 });
@@ -21,7 +21,7 @@ router.get('/signin', (req, res) => {
 // 로그인 기능
 router.post('/signin', async (req, res) => {
   try {
-    const { email, nickname, pwd } = req.body;
+    const { email, pwd } = req.body;
     const exist = await findUser(email);
     console.log(exist);
     console.log(exist[0].dataValues.pwd);
@@ -31,8 +31,9 @@ router.post('/signin', async (req, res) => {
     if (pwd !== exist[0].dataValues.pwd) {
       res.status(401).send({ msg: 'wrong password' });
     } else {
-      res.cookie(req.body, JSON.stringify(email));
-      res.status(200).json({ msg: 'Login success' });
+      res.cookie('email', JSON.stringify(email));
+      // res.status(200).json({ msg: 'Login success' });
+      res.redirect('/');
     }
   } catch (err) {
     console.log(err);
@@ -45,13 +46,14 @@ router.post('/signin', async (req, res) => {
 router.post('/signup', async (req, res) => {
   try {
     const { email, nickname, pwd } = req.body;
+    console.log(email);
     const exist = await findUser(email);
-    if (exist) {
+    console.log(exist);
+    if (exist[0]) {
       res.status(400).json({ msg: 'You have already signed up' });
-    } else if (pwd !== exist.pwd) {
-      res.status(401).send({ msg: 'wrong password' });
     } else {
-      res.status(200).json({ msg: 'signup success' });
+      await createUser(email, nickname, pwd);
+    res.status(200).json({ msg: 'signup success' });
     }
   } catch (err) {
     console.log(err);
@@ -66,7 +68,7 @@ router.post('/signout', function (req, res) {
       if (err) {
         console.log(err);
       } else {
-        res.clearCookie('login');
+        res.clearCookie('email');
         res.status(200).send('logout');
       }
     });
@@ -74,8 +76,5 @@ router.post('/signout', function (req, res) {
     res.status(400).send('logout failed');
   }
 });
-
-// 사용자가 글을 게시하는 endpoint
-router.post('/upload', function (req, res) {});
 
 module.exports = router;
