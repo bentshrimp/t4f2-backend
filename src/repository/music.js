@@ -8,7 +8,7 @@ async function addMusic(title, artist, mail, post_id) {
       user_mail: mail,
       post_id: post_id,
     });
-    return user;
+    return music;
   } catch (error) {
     throw error;
   }
@@ -23,7 +23,7 @@ async function updateMusic(id, title, artist) {
       },
       { where: { id: id } }
     );
-    return user;
+    return music;
   } catch (error) {
     throw error;
   }
@@ -34,7 +34,7 @@ async function deleteMusic(id) {
     const music = await Music.deleteMusic({
       where: { id: id },
     });
-    return user;
+    return music;
   } catch (error) {
     throw error;
   }

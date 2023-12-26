@@ -25,6 +25,7 @@ async function updateNickname(mail, nickname, pwd) {
       { nickname: nickname },
       { where: { mail: mail } }
     );
+    return user;
   } catch (error) {
     console.log(error);
   }
@@ -33,6 +34,7 @@ async function updateNickname(mail, nickname, pwd) {
 async function updatePwd(mail, nickname, pwd) {
   try {
     const user = await User.update({ pwd: pwd }, { where: { mail: mail } });
+    return user;
   } catch (error) {
     console.log(error);
   }

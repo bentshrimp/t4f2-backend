@@ -10,6 +10,7 @@ async function createPost(id, content, mail) {
       edited: false,
       user_mail: mail,
     });
+    return post
   } catch (error) {
     throw error;
   }
@@ -43,6 +44,7 @@ async function updatePost(id, title, content) {
 async function deletePost(id) {
   try {
     const post = await Post.destroy({ where: { id: id } });
+    return post
   } catch (error) {
     throw error;
   }
