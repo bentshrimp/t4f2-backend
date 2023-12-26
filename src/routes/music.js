@@ -159,9 +159,11 @@ router.get("/search", function(req, res) {
       req.on("error", (error) => reject(error));
       req.end();
     }).then((data) => {
-      const list = JSON.parse(data);
+      const songs = [];
+      const list = JSON.parse(data)['tracks']['items'];
       console.log(list);
-      res.json({list: list});
+      list.forEach((e) => songs.push({name: e['name'], uri: e['uri']}));
+      res.json({songs: songs});
       return;
     });
   }
