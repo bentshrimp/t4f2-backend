@@ -4,13 +4,10 @@ async function addEmotion(type, id, user, mail, post_id) {
   try {
     const emotion = await Emotion.create({
       type: type,
-      id,
-      id,
+      id: id,
       user: user,
-      mail,
-      mail,
-      post_id,
-      post_id,
+      mail: mail,
+      post_id: post_id,
     });
     return emotion;
   } catch (error) {
