@@ -54,8 +54,8 @@ const Post = sequelize.define('Post', {
     autoIncrement: true,
     allowNull: false,
   },
-  topic_title: {
-    type: DataTypes.STRING(45),
+  topic_id: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   created_time: {
@@ -92,7 +92,7 @@ const Emotion = sequelize.define('Emotion', {
     allowNull: false,
   },
   post_id: {
-    type: DataTypes.STRING(45),
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 }, {
@@ -116,7 +116,7 @@ const Music = sequelize.define('Music', {
     allowNull: false,
   },
   post_id: {
-    type: DataTypes.STRING(45),
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 }, {
@@ -128,8 +128,8 @@ const Music = sequelize.define('Music', {
 User.hasMany(Post, { foreignKey: 'user_mail', sourceKey: 'mail' });
 Post.belongsTo(User, { foreignKey: 'user_mail', targetKey: 'mail' });
 
-Topic.hasMany(Post, { foreignKey: 'topic_title', sourceKey: 'title' });
-Post.belongsTo(Topic, { foreignKey: 'topic_title', targetKey: 'title' });
+Topic.hasMany(Post, { foreignKey: 'topic_id', sourceKey: 'title' });
+Post.belongsTo(Topic, { foreignKey: 'topic_id', targetKey: 'title' });
 
 User.hasMany(Emotion, { foreignKey: 'user_mail', sourceKey: 'mail' });
 Emotion.belongsTo(User, { foreignKey: 'user_mail', targetKey: 'mail' });

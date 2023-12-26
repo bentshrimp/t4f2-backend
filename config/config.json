@@ -4,20 +4,23 @@
     "password": "IsDead1!",
     "database": "mydb",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timezone": "Asia/Seoul"
   },
   "test": {
     "username": "root",
     "password": "IsDead1!",
     "database": "mydb",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timezone": "Asia/Seoul"
   },
   "production": {
     "username": "root",
     "password": "IsDead1!",
     "database": "mydb",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "timezone": "Asia/Seoul"
   }
 }
