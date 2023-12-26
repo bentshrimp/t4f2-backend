@@ -14,12 +14,12 @@ async function createUser(mail, nickname, pwd) {
 }
 
 // for test
-async function findUser() {
-  const users = await User.findAll({ where: { pwd: 'pwd' } });
+async function findUser(email) {
+  const users = await User.findAll({ where: { mail: email } });
   return users;
 }
 
-async function updateNickname(mail, nickname, pwd) {
+async function updateNickname(mail, nickname) {
   try {
     const user = await User.update(
       { nickname: nickname },
@@ -31,7 +31,7 @@ async function updateNickname(mail, nickname, pwd) {
   }
 }
 
-async function updatePwd(mail, nickname, pwd) {
+async function updatePwd(mail, pwd) {
   try {
     const user = await User.update({ pwd: pwd }, { where: { mail: mail } });
     return user;
