@@ -1,4 +1,4 @@
-const { Emotion, Emotion } = require('../../models/index');
+const { Emotion } = require('../../models/index');
 
 async function addEmotion(type, id, user, mail, post_id) {
   try {

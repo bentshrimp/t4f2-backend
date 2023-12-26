@@ -4,7 +4,7 @@ const cors = require('cors');
 const querystring = require('querystring');
 const https = require('https');
 const cookieParser = require('cookie-parser');
-const emotion = require('../repository/emotion');
+const {addEmotion, deleteEmotion} = require('../repository/emotion');
 const router = express.Router();
 
 router.post('/emotion', function(req, res) {
@@ -13,12 +13,14 @@ router.post('/emotion', function(req, res) {
     const mail = req.query.mail;
     const postId = req.query.postId;
 
-    emotion.addEmotion(type, id, nickname, mail, postId);
+    addEmotion(type, id, nickname, mail, postId);
+    //res.send({msg: "success post emote"});
 });
 
 router.delete('/emotion', function(req, res) {
     const id = req.query.id;
-    emotion.deleteEmotion(id);
+    deleteEmotion(id);
+    //res.send({msg: "success delete emote"});
 });
 
 module.exports = router;

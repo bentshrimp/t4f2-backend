@@ -9,6 +9,7 @@ const { sequelize } = require("./models");
 // var indexRouter = require("./src/routes/index");
 // // var usersRouter = require('./src/routes/users');
 var musicRouter = require('./src/routes/music');
+var emoteRouter = require('./src/routes/emotion');
 var app = express();
 
 // view engine setup
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // app.use("/", indexRouter);
 // // app.use('/', usersRouter);
 app.use('/', musicRouter);
+app.use('/emote', emoteRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
