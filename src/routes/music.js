@@ -92,16 +92,16 @@ router.get('/callback', function(req, res) {
                     console.log(access_token);
                 });
     
-                // res.redirect('/#' +
-                //     querystring.stringify({
-                //     access_token: access_token,
-                //     refresh_token: refresh_token
-                // }));
+                res.redirect('/music/#' +
+                    querystring.stringify({
+                    access_token: access_token,
+                    refresh_token: refresh_token
+                }));
                 console.log("End");
             }
             else {
                 console.log("invalid");
-                res.redirect('/#' +
+                res.redirect('/music/#' +
                     querystring.stringify({
                     error: 'invalid_token'
                 }));
@@ -124,7 +124,6 @@ router.get('/refresh_token', function(req, res){
     request.post(authOptions, function(error, response, body) {
         if (!error && response.statusCode === 200) {
             var access_token = body.access_token;
-            console.log(access_token);
             console.log(access_token);
             res.send({
                 'access_token': access_token
