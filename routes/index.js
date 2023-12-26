@@ -1,12 +1,11 @@
 var express = require('express');
 var router = express.Router();
 const { readPost, createPost } = require('../src/repository/post');
-const { createUser, findUser } = require('../src/repository/login');
+const { createUser, findUser } = require('../src/repository/user');
 const { createTopic } = require('../src/repository/topic');
 
 router.get('/post', async function (req, res, next) {
   try {
-    // const post = await createPost(1, 'content', 'mail');
     const post = await readPost(1);
     if (post === null) {
       console.log('post not found');

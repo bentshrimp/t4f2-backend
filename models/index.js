@@ -7,122 +7,148 @@ const sequelize = new Sequelize('mydb', 'root', 'IsDead1!', {
 });
 
 // User 모델 정의
-const User = sequelize.define('User', {
-  mail: {
-    type: DataTypes.STRING(45),
-    primaryKey: true,
-    allowNull: false,
+const User = sequelize.define(
+  'User',
+  {
+    mail: {
+      type: DataTypes.STRING(45),
+      primaryKey: true,
+      allowNull: false,
+    },
+    nickname: {
+      type: DataTypes.STRING(45),
+      allowNull: false,
+    },
+    pwd: {
+      type: DataTypes.STRING(45),
+      allowNull: false,
+    },
   },
-  nickname: {
-    type: DataTypes.STRING(45),
-    allowNull: false,
-  },
-  pwd: {
-    type: DataTypes.STRING(45),
-    allowNull: false,
-  },
-}, {
-  tableName: 'user',
-  timestamps: false,
-});
+  {
+    tableName: 'user',
+    timestamps: false,
+  }
+);
 
 // Topic 모델 정의
-const Topic = sequelize.define('Topic', {
-  title: {
-    type: DataTypes.STRING(45),
-    primaryKey: true,
-    allowNull: false,
+const Topic = sequelize.define(
+  'Topic',
+  {
+    title: {
+      type: DataTypes.STRING(45),
+      primaryKey: true,
+      allowNull: false,
+    },
+    content: {
+      type: DataTypes.STRING(45),
+      allowNull: false,
+    },
   },
-  content: {
-    type: DataTypes.STRING(45),
-    allowNull: false,
-  },
-}, {
-  tableName: 'topic',
-  timestamps: false,
-});
+  {
+    tableName: 'topic',
+    timestamps: false,
+  }
+);
 
 // Post 모델 정의
-const Post = sequelize.define('Post', {
-  content: {
-    type: DataTypes.STRING(45),
-    allowNull: false,
+const Post = sequelize.define(
+  'Post',
+  {
+    content: {
+      type: DataTypes.STRING(45),
+      allowNull: false,
+    },
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    topic_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    created_time: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    edited: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    user_mail: {
+      type: DataTypes.STRING(45),
+      allowNull: false,
+    },
   },
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
-  },
-  topic_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  created_time: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  edited: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
-  user_mail: {
-    type: DataTypes.STRING(45),
-    allowNull: false,
-  },
-}, {
-  tableName: 'post',
-  timestamps: false,
-});
+  {
+    tableName: 'post',
+    timestamps: false,
+  }
+);
 
 // Emotion 모델 정의
-const Emotion = sequelize.define('Emotion', {
-  type: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
+const Emotion = sequelize.define(
+  'Emotion',
+  {
+    type: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    user_mail: {
+      type: DataTypes.STRING(45),
+      allowNull: false,
+    },
+    post_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
-  },
-  user_mail: {
-    type: DataTypes.STRING(45),
-    allowNull: false,
-  },
-  post_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-}, {
-  tableName: 'emotion',
-  timestamps: false,
-});
+  {
+    tableName: 'emotion',
+    timestamps: false,
+  }
+);
 
 // Music 모델 정의
-const Music = sequelize.define('Music', {
-  title: {
-    type: DataTypes.STRING(45),
-    primaryKey: true,
-    allowNull: false,
+const Music = sequelize.define(
+  'Music',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
+    title: {
+      type: DataTypes.STRING(45),
+      primaryKey: true,
+      allowNull: false,
+    },
+    artist: {
+      type: DataTypes.STRING(45),
+      allowNull: false,
+    },
+    user_mail: {
+      type: DataTypes.STRING(45),
+      allowNull: false,
+    },
+    post_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
-  artist: {
-    type: DataTypes.STRING(45),
-    allowNull: false,
-  },
-  user_mail: {
-    type: DataTypes.STRING(45),
-    allowNull: false,
-  },
-  post_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-}, {
-  tableName: 'music',
-  timestamps: false,
-});
+  {
+    tableName: 'music',
+    timestamps: false,
+  }
+);
 
 // 모델 간의 관계 설정
 User.hasMany(Post, { foreignKey: 'user_mail', sourceKey: 'mail' });
