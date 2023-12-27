@@ -15,13 +15,13 @@ router.post('/:emoteId', async (req, res) => {
     const postId = req.query.postId;
     const id = req.params.emoteId;
 
-    const emote = addEmotion(type, id, nickname, mail, postId);
+    const emote = await addEmotion(type, id, nickname, mail, postId);
     //res.send({msg: "success post emote"});
 });
 
 router.delete('/:emoteId', async (req, res) => {
     const id = req.params.emoteId;
-    const emote = deleteEmotion(id);
+    const emote = await deleteEmotion(id);
     //res.send({msg: "success delete emote"});
 });
 
@@ -31,7 +31,7 @@ router.post('/song/:postId', async (req, res) => {
     const user_mail = req.query.mail;
     const post_id = req.params.postId;
 
-    const music = addMusic(title, artist, user_mail, post_id);
+    const music = await addMusic(title, artist, user_mail, post_id);
 })
 
 module.exports = router;
