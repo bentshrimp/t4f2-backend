@@ -18,7 +18,10 @@ router.post('/', async function (req, res) {
 router.get('/:topicId', async function (req, res, next) {
   const topic = (await readTopic(req.params.topicId))[0];
   if (topic) {
-    res.status(200).send(topic);
+    const posts = await getPosts(req.params.topicId);
+    const postValues = posts.map((post) => post.dataValues.content);
+    result.posts = postValues;
+    res.status(200).send(result);
   } else {
     res.status(400).json({ msg: 'no topic found' });
   }
