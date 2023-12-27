@@ -12,7 +12,7 @@ const client_secret = '50ccef21e9ab46b48efe4ea526d50c04';
 const redirect_uri = 'http://localhost:3000/music/callback';
 const stateKey = 'spotify_auth_state';
 
-var access_token = null;
+var access_token = 'BQD3wMwYrrFkmToUnFqyqgyes3IoGCmFoN0m6kzNgKDMPegCQ0zeO5dh7Ra8BBNXZoFnX7-zJQzY045vKmM_YQHB1DN14TOACMAjvhNfK1oO_5HnSpFh1YTST-DTs8jAlT9TtVQinOL7G4zTsPAulR-mU7aMcXJY2Uzz1rNAM6jLU0ujEm0ICDOzh_aNVKndJQMd7HRRu0FuZ_9t5QbQiA';
 var refresh_token = null;
 
 // 랜덤 문자열 생성 함수
