@@ -1,19 +1,18 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 // const session = require('express-session');
-var cookieParser = require('cookie-parser');
-//var bodyParser = require('body-parser');
-var logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const { sequelize } = require('./models');
 
-var indexRouter = require("./src/routes/index");
-var postRouter = require('./src/routes/post');
-var topicRouter = require('./src/routes/topic');
-var musicRouter = require('./src/routes/music');
-var emoteRouter = require('./src/routes/emotion');
-var app = express();
+const indexRouter = require("./src/routes/index");
+const postRouter = require('./src/routes/post');
+const topicRouter = require('./src/routes/topic');
+const musicRouter = require('./src/routes/music');
+const emoteRouter = require('./src/routes/emotion');
+const app = express();
 
 const SECRET = process.env.SECRET;
 

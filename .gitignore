@@ -14,4 +14,6 @@ node_modules/
 src/login
 src/views
 
+config/
+
 .env

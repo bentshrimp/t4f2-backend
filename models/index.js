@@ -1,7 +1,10 @@
 const { Sequelize, DataTypes } = require('sequelize');
+const dbConfig = require("../config/config.json")
 
 // Sequelize 연결 설정
-const sequelize = new Sequelize('mydb', 'root', 'IsDead1!', {
+const db = dbConfig.test
+
+const sequelize = new Sequelize(db.database, db.username, db.password, {
   host: 'localhost',
   dialect: 'mysql',
 });

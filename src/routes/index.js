@@ -3,6 +3,7 @@ const path = require('path');
 const router = express.Router();
 const { createUser, findUser } = require('../repository/user');
 const { getTodayTopic } = require('../repository/topic');
+const dbConfig = require('../../config/config.json');
 
 const SECRET = process.env.SECRET;
 
@@ -53,7 +54,7 @@ router.post('/signup', async (req, res) => {
       res.status(400).json({ msg: 'You have already signed up' });
     } else {
       await createUser(email, nickname, pwd);
-    res.status(200).json({ msg: 'signup success' });
+      res.status(200).json({ msg: 'signup success' });
     }
   } catch (err) {
     console.log(err);
