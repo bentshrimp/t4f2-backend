@@ -1,11 +1,12 @@
 const { User } = require('../../models/index');
 
-async function createUser(mail, nickname, pwd) {
+async function createUser(email, nickname, password, salt) {
   try {
     const user = await User.create({
-      mail: mail,
+      email: email,
       nickname: nickname,
-      pwd: pwd,
+      password: password,
+      salt: salt,
     });
     return user;
   } catch (error) {
@@ -15,8 +16,8 @@ async function createUser(mail, nickname, pwd) {
 
 // for test
 async function findUser(email) {
-  const users = await User.findAll({ where: { mail: email } });
-  return users;
+  const users = await User.findAll({ where: { email: email } });
+  return users[0];
 }
 
 async function updateNickname(mail, nickname) {

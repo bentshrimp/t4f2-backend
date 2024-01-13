@@ -10,10 +10,7 @@ lerna-debug.log*
 # Node modules
 node_modules/
 
-# Sub src
-src/login
-src/views
-
 config/
+img/
 
 .env

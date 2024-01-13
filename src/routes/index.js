@@ -4,13 +4,16 @@ const router = express.Router();
 const { createUser, findUser } = require('../repository/user');
 const { getTodayTopic } = require('../repository/topic');
 const dbConfig = require('../../config/config.json');
+const jwt = require('jsonwebtoken');
+const { createHashedPassword } = require('../lib/auth');
 
-const SECRET = process.env.SECRET;
+const SECRET_KEY = process.env.SECRET_KEY;
 
 /* GET home page. */
 router.get('/', async (req, res) => {
   const todayposts = await getTodayTopic();
   console.log(todayposts);
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.status(200).json(todayposts);
 });
 
@@ -22,19 +25,35 @@ router.get('/signin', (req, res) => {
 // 로그인 기능
 router.post('/signin', async (req, res) => {
   try {
-    const { email, pwd } = req.body;
+    const email = req.body.email;
+    const inputPwd = req.body.password;
+
     const exist = await findUser(email);
-    console.log(exist);
-    console.log(exist[0].dataValues.pwd);
+    const password = exist.dataValues.password;
+    const salt = exist.dataValues.salt;
+    // console.log('exsit:', exist.dataValues);
     if (!exist) {
       res.status(401).send({ msg: "account doesn't exist" });
     }
-    if (pwd !== exist[0].dataValues.pwd) {
+    const { hashedPwd } = await createHashedPassword(inputPwd, salt);
+    // console.log(hashedPwd);
+    if (password !== hashedPwd) {
       res.status(401).send({ msg: 'wrong password' });
     } else {
-      res.cookie('email', JSON.stringify(email));
-      // res.status(200).json({ msg: 'Login success' });
-      res.redirect('/');
+      // res.cookie('email', JSON.stringify(email));
+      const token = jwt
+        .sign(
+          {
+            email: email,
+            password: password,
+          },
+          SECRET_KEY,
+          {
+            expiresIn: '5m', // for test,
+          }
+        )
+        // res.status(200).json({ msg: 'Login success' });
+        .res.redirect('/');
     }
   } catch (err) {
     console.log(err);
@@ -46,14 +65,14 @@ router.post('/signin', async (req, res) => {
 // 회원가입 기능
 router.post('/signup', async (req, res) => {
   try {
-    const { email, nickname, pwd } = req.body;
-    console.log(email);
+    const { email, nickname, password } = req.body;
     const exist = await findUser(email);
-    console.log(exist);
-    if (exist[0]) {
+    if (exist) {
       res.status(400).json({ msg: 'You have already signed up' });
     } else {
-      await createUser(email, nickname, pwd);
+      const { hashedPwd, salt } = await createHashedPassword(password);
+      // console.log(hashedPwd, salt);
+      await createUser(email, nickname, hashedPwd, salt);
       res.status(200).json({ msg: 'signup success' });
     }
   } catch (err) {

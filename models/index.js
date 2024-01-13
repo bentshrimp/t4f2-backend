@@ -1,55 +1,50 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const dbConfig = require("../config/config.json")
+const dbConfig = require('../config/config.json');
 
-// Sequelize 연결 설정
-const db = dbConfig.test
+const db = dbConfig.test;
 
 const sequelize = new Sequelize(db.database, db.username, db.password, {
-  host: 'localhost',
-  dialect: 'mysql',
+  host: db.host,
+  dialect: db.dialect,
 });
 
 // User 모델 정의
 const User = sequelize.define(
   'User',
   {
-    mail: {
-      type: DataTypes.STRING(45),
+    index: {
+      type: DataTypes.INTEGER,
       primaryKey: true,
+      allowNull: false,
+      autoIncrement: true,
+    },
+    email: {
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
     nickname: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(15),
+      allowNull: false,
+      unique: true,
+    },
+    password: {
+      type: DataTypes.CHAR(88),
       allowNull: false,
     },
-    pwd: {
-      type: DataTypes.STRING(45),
+    salt: {
+      type: DataTypes.CHAR(88),
       allowNull: false,
+    },
+    imageUrl: {
+      type: DataTypes.STRING(20),
+      allowNull: true,
     },
   },
   {
     tableName: 'user',
-    timestamps: false,
-  }
-);
-
-// Topic 모델 정의
-const Topic = sequelize.define(
-  'Topic',
-  {
-    title: {
-      type: DataTypes.STRING(45),
-      primaryKey: true,
-      allowNull: false,
-    },
-    content: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-  },
-  {
-    tableName: 'topic',
-    timestamps: false,
+    timestamps: true,
+    createdAt: 'signedupAt',
+    updatedAt: 'changedPwdAt',
   }
 );
 
@@ -57,56 +52,53 @@ const Topic = sequelize.define(
 const Post = sequelize.define(
   'Post',
   {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      allowNull: false,
+      autoIncrement: true,
+    },
     content: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    id: {
+    title: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
+    imgUrl: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    post_id: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
-    },
-    topic_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    created_time: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    edited: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    user_mail: {
-      type: DataTypes.STRING(45),
-      allowNull: false,
+      allowNull: true,
     },
   },
   {
     tableName: 'post',
-    timestamps: false,
+    timestamps: true,
+    updatedAt: 'modifiedAt',
   }
 );
 
-// Emotion 모델 정의
-const Emotion = sequelize.define(
-  'Emotion',
+// Comment 모델 정의
+const Comment = sequelize.define(
+  'Comment',
   {
-    type: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      allowNull: false,
       autoIncrement: true,
+    },
+    content: {
+      type: DataTypes.TEXT,
       allowNull: false,
     },
-    user_mail: {
-      type: DataTypes.STRING(45),
-      allowNull: false,
+    imgUrl: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
     post_id: {
       type: DataTypes.INTEGER,
@@ -114,8 +106,33 @@ const Emotion = sequelize.define(
     },
   },
   {
+    tableName: 'comment',
+    timestamps: true,
+    updatedAt: 'modifiedAt',
+  }
+);
+
+// Emotion 모델 정의
+const Emotion = sequelize.define(
+  'Emotion',
+  {
+    user_index: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    comment_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    type: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  },
+  {
     tableName: 'emotion',
-    timestamps: false,
+    timestamps: true,
+    updatedAt: false,
   }
 );
 
@@ -126,22 +143,22 @@ const Music = sequelize.define(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
       allowNull: false,
+      autoIncrement: true,
     },
     title: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     artist: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(20),
       allowNull: false,
     },
-    user_mail: {
-      type: DataTypes.STRING(45),
+    user_index: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
-    post_id: {
+    comment_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -152,31 +169,64 @@ const Music = sequelize.define(
   }
 );
 
+// Tag 모델 정의
+const Tag = sequelize.define(
+  'Tag',
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      allowNull: false,
+      autoIncrement: true,
+    },
+    content: {
+      type: DataTypes.STRING(10),
+      allowNull: false,
+    },
+  },
+  {
+    tableName: 'tag',
+    timestamps: false,
+  }
+);
+
+// TagMapping 모델 정의
+const TagMapping = sequelize.define(
+  'TagMapping',
+  {
+    post_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    tag_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  },
+  {
+    tableName: 'tag_mapping',
+    timestamps: false,
+  }
+);
+
 // 모델 간의 관계 설정
-User.hasMany(Post, { foreignKey: 'user_mail', sourceKey: 'mail' });
-Post.belongsTo(User, { foreignKey: 'user_mail', targetKey: 'mail' });
+Post.hasMany(Comment, { foreignKey: 'post_id', sourceKey: 'id' });
+Comment.belongsTo(Post, { foreignKey: 'post_id', targetKey: 'id' });
 
-Topic.hasMany(Post, { foreignKey: 'topic_id', sourceKey: 'title' });
-Post.belongsTo(Topic, { foreignKey: 'topic_id', targetKey: 'title' });
+Post.hasMany(TagMapping, { foreignKey: 'post_id', sourceKey: 'id' });
+TagMapping.belongsTo(Post, { foreignKey: 'post_id', targetKey: 'id' });
 
-User.hasMany(Emotion, { foreignKey: 'user_mail', sourceKey: 'mail' });
-Emotion.belongsTo(User, { foreignKey: 'user_mail', targetKey: 'mail' });
-
-Post.hasMany(Emotion, { foreignKey: 'post_id', sourceKey: 'id' });
-Emotion.belongsTo(Post, { foreignKey: 'post_id', targetKey: 'id' });
-
-User.hasMany(Music, { foreignKey: 'user_mail', sourceKey: 'mail' });
-Music.belongsTo(User, { foreignKey: 'user_mail', targetKey: 'mail' });
-
-Post.hasMany(Music, { foreignKey: 'post_id', sourceKey: 'id' });
-Music.belongsTo(Post, { foreignKey: 'post_id', targetKey: 'id' });
+Tag.hasMany(TagMapping, { foreignKey: 'tag_id', sourceKey: 'id' });
+TagMapping.belongsTo(Tag, { foreignKey: 'tag_id', targetKey: 'id' });
 
 // 모델을 외부에서 사용할 수 있도록 export
 module.exports = {
   sequelize,
   User,
-  Topic,
   Post,
+  Comment,
   Emotion,
   Music,
+  Tag,
+  TagMapping,
 };

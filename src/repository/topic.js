@@ -4,7 +4,6 @@ const { Op } = require('sequelize');
 async function createTopic(title, content) {
   try {
     const topic = await Topic.create({
-      id: 1,
       title: title,
       content: content,
     });
@@ -13,11 +12,19 @@ async function createTopic(title, content) {
     throw error;
   }
 }
-async function readTopic(id) {
+async function getTopic(id) {
   try {
     const topic = await Topic.findAll({
       where: { id: id },
     });
+    return topic;
+  } catch (error) {
+    throw error;
+  }
+}
+async function getSoredTopic(number, query) {
+  try {
+    const topic = await Topic.findAll({ limit: number, order: [query] });
     return topic;
   } catch (error) {
     throw error;
@@ -49,8 +56,8 @@ async function deleteTopic(id) {
 
 async function getTodayTopic() {
   try {
-    const posts = await Topic.findAll({ limit: 3 });
-    return posts;
+    const topics = await Topic.findAll({ limit: 3 });
+    return topics;
   } catch (error) {
     throw error;
   }
@@ -73,7 +80,7 @@ async function searchTopic(query) {
 
 module.exports = {
   createTopic,
-  readTopic,
+  getTopic,
   updateTopic,
   deleteTopic,
   getTodayTopic,

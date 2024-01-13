@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const { sequelize } = require('./models');
 
-const indexRouter = require("./src/routes/index");
+const indexRouter = require('./src/routes/index');
 const postRouter = require('./src/routes/post');
 const topicRouter = require('./src/routes/topic');
 const musicRouter = require('./src/routes/music');
@@ -17,7 +17,7 @@ const app = express();
 const SECRET = process.env.SECRET;
 
 // view engine setup
-app.set('views', path.join(__dirname, '/src/views'));
+app.set('views', path.join(__dirname, './views'));
 app.set('view engine', 'jade');
 
 const secret = process.env.SECRET;
@@ -52,7 +52,7 @@ app.use(function (err, req, res, next) {
 });
 
 sequelize
-  .sync()
+  .sync({ alter: true })
   .then(() => console.log('connected database'))
   .catch((err) => console.error('occurred error in database connecting', err));
 

@@ -1,12 +1,12 @@
 const { Emotion } = require('../../models/index');
 
-async function addEmotion(type, id, user, mail, post_id) {
+async function addEmotion(type, id, user, email, post_id) {
   try {
     const emotion = await Emotion.create({
       type: type,
       id: id,
       user: user,
-      mail: mail,
+      email: email,
       post_id: post_id,
     });
     return emotion;
