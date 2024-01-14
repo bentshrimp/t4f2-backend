@@ -5,9 +5,11 @@ const { createUser, findUser } = require('../repository/user');
 const { getTodayTopic } = require('../repository/topic');
 const dbConfig = require('../../config/config.json');
 const jwt = require('jsonwebtoken');
-const { createHashedPassword } = require('../lib/auth');
-
-const SECRET_KEY = process.env.SECRET_KEY;
+const { hashPwd } = require('../lib/auth');
+const morgan = require('morgan');
+const { signToken, authToken } = require('../lib/jwt');
+const { RefreshToken } = require('../../models');
+require('dotenv').config();
 
 /* GET home page. */
 router.get('/', async (req, res) => {
@@ -17,47 +19,50 @@ router.get('/', async (req, res) => {
   res.status(200).json(todayposts);
 });
 
-router.get('/signin', (req, res) => {
-  const filePath = path.join(__dirname, '../views/login.html');
-  res.sendFile(filePath);
+router.post('/token', authToken, (req, res) => {
+  res.status(200).json({ msg: 'clear' });
 });
 
 // 로그인 기능
 router.post('/signin', async (req, res) => {
   try {
+    // from client
     const email = req.body.email;
-    const inputPwd = req.body.password;
-
+    const clientPwd = req.body.password;
+    // from DB
     const exist = await findUser(email);
-    const password = exist.dataValues.password;
+    const nickname = exist.dataValues.nickname;
+    const dbPwd = exist.dataValues.password;
     const salt = exist.dataValues.salt;
     // console.log('exsit:', exist.dataValues);
+
     if (!exist) {
       res.status(401).send({ msg: "account doesn't exist" });
     }
-    const { hashedPwd } = await createHashedPassword(inputPwd, salt);
+
+    const { hashedPwd } = await hashPwd(clientPwd, salt);
     // console.log(hashedPwd);
-    if (password !== hashedPwd) {
+    if (dbPwd !== hashedPwd) {
       res.status(401).send({ msg: 'wrong password' });
     } else {
-      // res.cookie('email', JSON.stringify(email));
-      const token = jwt
-        .sign(
-          {
-            email: email,
-            password: password,
-          },
-          SECRET_KEY,
-          {
-            expiresIn: '5m', // for test,
-          }
-        )
-        // res.status(200).json({ msg: 'Login success' });
-        .res.redirect('/');
+      const accessToken = await signToken(
+        { email: email, password: hashedPwd },
+        '5m'
+      );
+      const refreshToken = await signToken({}, '10m');
+      await RefreshToken.create({
+        refreshToken: refreshToken,
+        user_nickname: nickname,
+      });
+      res
+        .status(200)
+        .setHeader('Authorization', 'Bearer ' + accessToken)
+        .setHeader('Refresh', 'Bearer ' + refreshToken)
+        .json({ msg: 'Login success' });
     }
   } catch (err) {
     console.log(err);
-    if (err == 'Nan') res.status(401).json({ msg: 'Non Account' });
+    if (err == 'Nan') res.status(401).json({ msg: 'Account not found' });
     else res.status(401).json({ msg: 'Format Error' });
   }
 });
@@ -70,7 +75,7 @@ router.post('/signup', async (req, res) => {
     if (exist) {
       res.status(400).json({ msg: 'You have already signed up' });
     } else {
-      const { hashedPwd, salt } = await createHashedPassword(password);
+      const { hashedPwd, salt } = await hashPwd(password);
       // console.log(hashedPwd, salt);
       await createUser(email, nickname, hashedPwd, salt);
       res.status(200).json({ msg: 'signup success' });
@@ -82,19 +87,6 @@ router.post('/signup', async (req, res) => {
 });
 
 // 로그아웃 엔드포인트
-router.post('/signout', function (req, res) {
-  if (req.session.userId) {
-    req.session.destroy(function (err) {
-      if (err) {
-        console.log(err);
-      } else {
-        res.clearCookie('email');
-        res.status(200).send('logout');
-      }
-    });
-  } else {
-    res.status(400).send('logout failed');
-  }
-});
+router.post('/signout', function (req, res) {});
 
 module.exports = router;

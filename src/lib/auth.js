@@ -1,8 +1,6 @@
-const { rejects } = require('node:assert');
 const crypto = require('node:crypto');
-const { resolve } = require('node:path');
 
-const createSalt = async () => {
+const createSalt = () => {
   return new Promise((resolve, reject) => {
     crypto.randomBytes(64, (err, buf) => {
       if (err) {
@@ -14,7 +12,7 @@ const createSalt = async () => {
   });
 };
 
-const createHashedPassword = (plainPwd, salt = null) => {
+const hashPwd = async (plainPwd, salt = null) => {
   return new Promise(async (resolve, reject) => {
     if (!salt) {
       salt = await createSalt();
@@ -31,5 +29,5 @@ const createHashedPassword = (plainPwd, salt = null) => {
 
 module.exports = {
   createSalt,
-  createHashedPassword,
+  hashPwd,
 };

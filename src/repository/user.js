@@ -16,8 +16,8 @@ async function createUser(email, nickname, password, salt) {
 
 // for test
 async function findUser(email) {
-  const users = await User.findAll({ where: { email: email } });
-  return users[0];
+  const user = await User.findOne({ where: { email: email } });
+  return user;
 }
 
 async function updateNickname(mail, nickname) {
